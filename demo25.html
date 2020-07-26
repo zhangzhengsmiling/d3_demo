@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    // const outerWidth = document.documentElement.clientWidth;
+    // const outerHeight = document.documentElement.clientWidth;
+    // const force = d3.forceManyBody()
+    //   // .size([outerWidth, outerHeight])
+    //   // .gravity(0)
+    //   // .charge(0)
+    //   // .friction(0.7)
+    //   console.log(force())
+    // const svg = d3.select('body')
+    //   .append('svg')
+    //   .attr('widht', outerWidth)
+    //   .attr('height', outerHeight)
+
+    // svg.on('mousemove', (d, i, doms) => {
+    //   const position = d3.mouse(doms[i]);
+    //   const node = {
+    //     x: position[0],
+    //     y: position[1],
+    //   }
+    //   svg.append('circle')
+    //     .attr('fill', 'red')
+    //     .attr('cx', d => d.x)
+    //     .attr('cy', d => d.y)
+    //     .attr('r', 0)
+    //     .transition()
+    //     .attr('r', 4.5)
+    //     .delay(2000)
+    //     .transition()
+    //     .attr('r', 0)
+    //     .each('end', () => {
+    //       force.nodes().shift()
+    //     })
+    //     .remove()
+    //   force.nodes().push(node)
+    // })
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientHeight;
+
+    const random = () => {
+      return {
+        x: Math.random() * 100 + 300,
+        y: Math.random() * 100 + 300,
+      }
+    }
+    const ds = new Array(200).fill('').map(random)
+
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+
+    const force = d3.forceSimulation(ds)
+      .tick(200)
+      .force('manybody', d3.forceManyBody().strength(-5).distanceMax(20))
+      .force('center', d3.forceCenter(500, 500))
+      .force('collision', d3.forceCollide(5))
+      .on('tick', () => {
+        console.log('...')
+        svg.selectAll('circle')
+          .data(force.nodes())
+          .enter()
+          .append('circle')
+          .attr('cx', 500)
+          .attr('cy', 500)
+          .attr('r', 5)
+        svg.selectAll('circle')
+          .data(force.nodes())
+          .transition()
+          .duration(200)
+          .attr('cx', d => d.x)
+          .attr('cy', d => d.y)
+          .attr('fill', 'orange')
+        svg.selectAll('circle')
+          .data(force.nodes())
+          .exit()
+          .attr('opacity', 1.0)
+          .transition()
+          .attr('opacity', 0.0)
+          .remove()
+      })
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    const ds = {
+      name: 'zhangzheng',
+      age: 18,
+      hobby: 'coding',
+      children: [
+        {
+          name: 'wanghuahu',
+          age: 22,
+          hobby: 'reading',
+          children: [
+            {
+              name: 'zhangsheng',
+              age: 20,
+              hobby: 'game',
+              children: null,
+            },
+            {
+              name: 'zhangliu',
+              age: 22,
+              hobby: 'singing',
+              children: null,
+            }
+          ]
+        },
+        {
+          name: 'xufei',
+          age: 21,
+          hobby: 'aaa',
+          children: null,
+        }
+      ]
+    }
+
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientHeight;
+    const h_data = d3.hierarchy(ds)
+    const treeData = d3.tree().size([outerWidth, outerHeight])(h_data)
+
+    const treeRender = d3.linkVertical()
+      .x(d => d.x)
+      .y(d => d.y)
+
+    console.log(treeData.links())
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+      .selectAll('path')
+      .data(treeData.links())
+      .join('path')
+      .attr('stroke', 'red')
+      .attr('fill', 'none')
+      .attr('stroke-width', 3)
+      .attr('d', treeRender)
+  </script>
+  
+</body>
+</html>
