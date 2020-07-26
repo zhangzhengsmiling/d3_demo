@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', 800)
+      .attr('height', 800)
+    
+    const g = svg.append('g')
+      .attr('id', 'map')                              
+    
+    const projection = d3.geoNaturalEarth1()
+    const geo = d3.geoPath().projection(projection);
+
+
+    d3.json('https://geo.datav.aliyun.com/areas_v2/bound/100000_full.json')
+      .then(data => {
+        projection.fitSize([800, 800], data)
+        g.selectAll('path')
+          .data(data.features)
+          .join('path')
+          .attr('d', geo)
+          .attr('stroke', 'gray')
+          .attr('stroke-width', 4)
+          .attr('fill', 'rgba(100, 100, 100, 0.4)')
+          .on('mouseover', (d, i, target) => {
+            d3.select(target[i]).attr('fill', 'rgba(100, 100, 100, 0.1)').text(d => d.properties.name)
+          })
+          .on('mouseout', (d, i, target) => {
+            d3.select(target[i]).attr('fill', 'rgba(100, 100, 100, 0.4)')
+          })
+      })
+  </script>
+</body>
+</html>

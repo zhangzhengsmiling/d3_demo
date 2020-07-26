@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    createSvg = () => {
+      return d3.select('body')
+        .append('svg')
+        .attr('width', 800)
+        .attr('height', 800)
+    }
+
+    renderAxis = () => {
+      const scale = d3.scaleLinear().domain([1000, 0]).range([0, 400])
+      const svg = createSvg();
+
+      console.log(d3.svg)
+
+      var axis = d3.axisRight(scale).ticks(3)
+        .tickFormat(v => v + '%')
+        .tickValues([1, 2, 3, 4, 5, 6, 7, 8].map(v => v * 100))
+        .tickPadding(10)
+        .tickSize(20) // 轴线长度
+    // .tickValues([1, 2, 3, 5, 8, 13, 21]);
+      const g = svg.append('g')
+      .attr('transform', 'translate(' + 600 + ',' + 20 + ')')
+      .call(axis)
+    }
+
+
+renderAxis()
+  </script>
+  
+</body>
+</html>

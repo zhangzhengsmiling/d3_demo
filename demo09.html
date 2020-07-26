@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+
+    const data = [
+      'linear',
+      'cubic',
+      'cubic-in-out',
+      'sin',
+      'sin-out',
+      'exp',
+      'circle',
+      'back',
+      'bounce',
+      // t => t * t,
+    ]
+
+    const colorScale = d3.scaleOrdinal(d3.schemeCategory10)
+
+    const map = new Map([
+      ['linear', d3.easeLinear],
+      ['cubic', d3.easeCubic],
+      ['cubic-in-out', d3.easeCubicInOut],
+      ['sin-out', d3.easeSinOut],
+      ['sin', d3.easeSin],
+      ['bounce', d3.easeBounce],
+      ['back', d3.easeBack],
+      ['exp', d3.easeExp],
+      ['circle', d3.easeCircle],
+    ])
+    d3.select('body')
+      .selectAll('div')
+      .data(data)
+      .enter()
+      .append('div')
+      .attr('class', 'fixed-cell')
+      .style('position', 'absolute')
+      .style('top', (d, i) => i * 40 + 'px')
+      .style('width', '120px')
+      .style('height', '30px')
+      .style('background', (d, i) => colorScale(i))
+      .style('color', 'white')
+      .text(d => {
+        if(typeof d === 'function') {
+          return 'custom';
+        } else {
+          return d;
+        }
+      })
+
+      d3.selectAll('div')
+        .each(function(d, i, target) {
+          d3.select(target[i])
+          .transition()
+          .duration(3000)
+          .ease(t => map.get(d)(t))
+          .style('left', '500px')
+        })
+
+  </script>
+  
+</body>
+</html>

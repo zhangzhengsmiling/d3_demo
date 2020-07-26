@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientHeight;
+    const ds = new Array(5).fill('').map(item => ({
+      value: d3.randomUniform(100, 200)(),
+    }))
+
+    const arc = d3.arc()
+      .outerRadius(200)
+      .innerRadius(100)
+
+    const dataPie = d3.pie()(ds.map(item => item.value))
+    console.log(dataPie)
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+
+    svg.append('g')
+      .attr('id', 'pie')
+      .attr('transform', `translate(400, 400)`)
+      .selectAll('path')
+      .data(dataPie)
+      .join('path')
+      .attr('stroke', 'gray')
+      .attr('fill', (d, i) => d3.schemeSet1[i])
+      .attr('d', arc)
+      .attr('stroke-width', 4)
+
+  
+  </script>
+  
+</body>
+</html>

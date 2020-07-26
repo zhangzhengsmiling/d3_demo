@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientHeight;
+    const padding = {
+      left: 120,
+      right: 50,
+      top: 50,
+      bottom: 50,
+    }
+    const innerWidth = outerWidth - padding.left - padding.right;
+    const innerHeight = outerHeight - padding.top - padding.bottom;
+    const amount = 30;
+
+    const id = d => d.name
+    const xValue = d => d.value
+    const yValue = d => d.name
+    const duration = 1000;
+
+
+    let ds = new Array(amount).fill('').map((item, index) => ({
+      name: `name${index}`,
+      value: d3.randomUniform(100, 1000)().toFixed(2),
+    }));
+
+    let yScale = d3.scaleBand()
+      .domain(ds.map(item => item.name))
+      .range([0, innerHeight])
+      .padding(0.2)
+
+    let xScale = d3.scaleLinear()
+      .domain([0, 1000])
+      .range([0, innerWidth])
+
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('id', 'bar-chart')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+
+    const renderAxis = (ds) => {
+      const xAxis = d3.axisBottom(xScale)
+        .ticks()
+        .tickSize(0)
+        .tickPadding(10)
+      const yAxis = d3.axisLeft(yScale)
+        .ticks()
+        .tickSize(0)
+        .tickPadding(10)
+        .tickFormat('')
+      svg.append('g')
+        .attr('id', 'x-axis')
+        .attr('transform', `translate(${padding.left}, ${padding.top + innerHeight})`)
+        .call(xAxis)
+
+      svg.append('g')
+        .attr('id', 'y-axis')
+        .attr('transform', `translate(${padding.left}, ${padding.top})`)
+        .call(yAxis)
+      svg.selectAll('text')
+        .data(ds)
+        .enter()
+        .append('text')
+        .attr('x', padding.left)
+        .attr('y', d => yScale(yValue(d)))
+        .text('aaaa')
+    }
+
+    const renderText = (ds) => {
+      const g = svg.append('g')
+
+      g.selectAll('text')
+        .data(ds, xValue)
+        .enter()
+        .append('text')
+      g.selectAll('text')
+        .data(ds, xValue)
+        .attr('x', d => padding.left + xScale(xValue(d)))
+        .attr('y', d => padding.top + yScale(yValue(d)))
+        .attr('stroke', '#000')
+        .text(xValue)
+
+      g.selectAll('text')
+        .data(ds, xValue)
+        .exit()
+        .remove();
+    }
+
+    const renderBar = (ds) => {
+      svg.selectAll('rect')
+        .data(ds)
+        .enter()
+        .append('rect')
+        .attr('transform', `translate(${padding.left}, ${padding.top})`)
+        .attr('x', padding.left)
+        .attr('y', d => yScale(d.name))
+
+      svg.selectAll('rect')
+        .data(ds)
+        .transition()
+        .duration(duration)
+        .attr('x', 0)
+        .attr('y', d => yScale(d.name))
+        .attr('width', d => xScale(d.value))
+        .attr('height', yScale.bandwidth)
+        .attr('fill', 'orange')
+
+      svg.selectAll('rect')
+        .data(ds)
+        .exit()
+        .remove()
+    }
+
+
+    const render = (ds) => {
+      yScale = d3.scaleBand()
+        .domain(ds.map(item => item.name))
+        .range([0, innerHeight])
+        .padding(0.2)
+
+      renderBar(ds)
+      // renderText(ds);
+    }
+
+    renderAxis(ds)
+
+    render(ds)
+
+    setInterval(() => {
+      ds.shift();
+      ds = new Array(amount).fill('').map((item, index) => ({
+        name: `name${index}`,
+        value: d3.randomUniform(100, 1000)().toFixed(2),
+      }))
+      render(ds);
+    }, 1000)
+      
+  </script>
+</body>
+</html>

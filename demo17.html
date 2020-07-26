@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script  src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    const body = d3.select('body')
+    body.append('div')
+      .style('width', '100px')
+      .style('height', '100px')
+      .style('background', 'red')
+      .style('position', 'absolute')
+      .style('left', '0px')
+      .style('top', '0px')
+      .transition()
+      .duration(1000)
+      .ease(d3.easeLinear)
+      .delay(1000)
+      .style('width', '400px')
+      .style('height', '2px')
+      .style('left', '400px')
+      .style('top', '400px')
+      .transition()
+      .duration(1000)
+      .ease(d3.easeLinear)
+      .delay(1000)
+      .style('width', '100px')
+      .style('height', '100px')
+      .style('left', '800px')
+      .style('top', '800px')
+  </script>
+  
+</body>
+</html>

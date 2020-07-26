@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <script  src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientHeight;
+    const padding = {
+      left: 50,
+      right: 50,
+      top: 50,
+      bottom: 50,
+    }
+
+    const innerWidth = outerWidth - padding.left - padding.right;
+    const innerHeight = outerHeight - padding.top - padding.bottom;
+    
+    const rand = () =>  Math.round(d3.randomUniform(0, 600)() * 100) / 100
+    const ds = new Array(20).fill('').map((item, index) => ({
+      name: `name${index}`,
+      value1: rand(),
+      value2: rand(),
+    }))
+
+    console.log(ds)
+
+    const yScale = d3.scaleLinear()
+      .domain([0, d3.max([d3.max(ds, d => d.value1), d3.max(ds, d => d.value2)])].reverse())
+      .range([0, innerHeight])
+      .nice();
+
+    const xScale = d3.scaleBand()
+      .domain(ds.map(d => d.name))
+      .range([0, innerWidth]);
+
+    const xAxis = d3.axisBottom(xScale)
+    const yAxis = d3.axisLeft(yScale)
+
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight);
+    
+    svg.append('g')
+      .attr('id', 'x-axis')
+      .attr('transform', `translate(${padding.left}, ${padding.top + innerHeight})`)
+      .call(xAxis);
+
+    svg.append('g')
+      .attr('id', 'y-axis')
+      .attr('transform', `translate(${padding.left}, ${padding.top})`)
+      .call(yAxis)
+    
+    const p1 = d3.line()
+      .x(d => xScale(d.name) + padding.left + xScale.bandwidth() / 2)
+      .y(d => yScale(d.value1) + padding.top)
+      .curve(d3.curveCatmullRom.alpha(0.5))
+    
+    const p2 = d3.line()
+      .x(d => xScale(d.name) + padding.left + xScale.bandwidth() / 2)
+      .y(d => yScale(d.value2) + padding.top)
+      .curve(d3.curveCatmullRom.alpha(0.5))
+      
+    svg.append('path')
+      .datum(ds)
+      .attr('id', 'value1')
+      .attr('stroke', 'red')
+      .attr('stroke-width', 2)
+      .attr('fill', 'none')
+      .attr('d', p1)
+
+    svg.append('path')
+      .datum(ds)
+      .attr('id', 'value1')
+      .attr('stroke', 'green')
+      .attr('stroke-width', 2)
+      .attr('fill', 'none')
+      .attr('d', p2)
+
+    svg.append('g')
+      .attr('transform', `translate(${padding.left}, ${padding.top})`)
+      .selectAll('circle')
+      .data(ds)
+      .join('circle')
+      .attr('cx', d => xScale(d.name) + xScale.bandwidth() / 2)
+      .attr('cy', d => yScale(d.value1))
+      .attr('r', 4)
+      .attr('stroke-width', 2)
+      .attr('stroke', 'red')
+      .attr('fill', 'white')
+      .on('mouseover', (d, i, target) => {
+        d3.select(target[i])
+          .transition()
+          .duration(200)
+          .attr('r', 6)
+      })
+      .on('mouseout', (d, i, target) => {
+        d3.select(target[i])
+          .transition()
+          .duration(200)
+          .attr('r', 4)
+      })
+
+    const area1 = d3.area()
+      .x(d => xScale(d.name))
+      .y(d => yScale(0))
+      .y1(d => yScale(d.value1))
+      .curve(d3.curveCatmullRom.alpha(0.5))
+
+    const area2 = d3.area()
+      .x(d => xScale(d.name))
+      .y(d => yScale(0))
+      .y1(d => yScale(d.value2))
+      .curve(d3.curveCatmullRom.alpha(0.5))
+    
+    svg.append('path')
+      .attr('transform', `translate(${padding.left + xScale.bandwidth() / 2}, ${padding.top})`)
+      .datum(ds)
+      .attr('id', 'value1')
+      .attr('stroke', 'green')
+      .attr('stroke-width', 2)
+      .attr('fill', 'rgba(100, 100, 100, 0.4)')
+      .attr('d', area1)
+
+    svg.append('path')
+      .attr('transform', `translate(${padding.left + xScale.bandwidth() / 2}, ${padding.top})`)
+      .datum(ds)
+      .attr('id', 'value1')
+      .attr('stroke', 'green')
+      .attr('stroke-width', 2)
+      .attr('fill', 'rgba(255, 255, 0, 0.4)')
+      .attr('d', area2)
+    
+
+    svg.append('g')
+      .attr('transform', `translate(${padding.left}, ${padding.top})`)
+      .selectAll('circle')
+      .data(ds)
+      .join('circle')
+      .attr('cx', d => xScale(d.name) + xScale.bandwidth() / 2)
+      .attr('cy', d => yScale(d.value2))
+      .attr('r', 4)
+      .attr('stroke-width', 2)
+      .attr('stroke', 'green')
+      .attr('fill', 'white')
+      .on('mouseover', (d, i, target) => {
+        d3.select(target[i])
+          .transition()
+          .duration(200)
+          .attr('r', 6)
+      })
+      .on('mouseout', (d, i, target) => {
+        d3.select(target[i])
+          .transition()
+          .duration(200)
+          .attr('r', 4)
+      })
+  </script>
+  
+</body>
+</html>

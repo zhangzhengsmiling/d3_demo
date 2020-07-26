@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    const transparent = (select) => select.attr('fill', 'transparent')
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', 800)
+      .attr('height', 800)
+    
+    svg.append('rect')
+      .attr('x', 10)
+      .attr('y', 10)
+      .attr('width', 50)
+      .attr('height', 50)
+      .attr('stroke', 'red')
+      .call(transparent)
+      // .attr('fill', 'transparent')
+
+    svg.append('circle')
+      .attr('cx', 100)
+      .attr('cy', 40)
+      .attr('r', 30)
+      .attr('stroke', 'green')
+      .call(transparent)
+      // .attr('fill', 'transparent')
+
+    svg.append('ellipse')
+      .attr('cx', 150)
+      .attr('cy', 40)
+      .attr('ry', 20)
+      .attr('rx', 60)
+      .attr('stroke', 'orange')
+      .call(transparent)
+      // .attr('fill', 'transparent')
+    
+    svg.append('line')
+      .attr('x1', 100)
+      .attr('y1', 100)
+      .attr('x2', 200)
+      .attr('y2', 100)
+      .call(transparent)
+      .attr('stroke', 'deeppink')
+    
+    svg.append('polygon')
+      .attr('points', '300,300 400,250 400,450')
+      .call(transparent)
+      .attr('stroke', 'blue')
+      // .attr('fill', 'transparent')
+    
+  </script>
+  
+</body>
+</html>

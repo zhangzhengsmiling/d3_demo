@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+
+    const random = (begin, end) => Math.round(Math.random() * (end - begin) + begin);
+    const ds = new Array(6).fill('').map(() => random(100, 600));
+
+    d3.select('body')
+      .append('svg')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', 800)
+      .attr('height', 800)
+      .selectAll('rect')
+      .data(ds)
+      .join(
+        enter => {console.log('enter'); return enter.append('rect')},
+        update => {
+          console.log(update)
+          console.log('update...')
+          return update.attr('x', 0)
+          .attr('y', (d, i) => i * 40)
+          .attr('fill', 'red')
+          .attr('width', d => d)
+          .attr('height', '30')
+        },
+        exit => exit.remove()
+      )
+
+  </script>
+</body>
+</html>

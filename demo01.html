@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <svg width="800" height="800">
+    <!-- <rect x="20" y="20" width="100" height="300"></rect> -->
+  </svg>
+
+  <script>
+    const data = [100, 200, 300, 400]
+    const svg = document.querySelector('svg');
+    const rect = (x, y, width, height, color) => {
+      return `<rect x=${x} y=${y} width=${width} height=${height} fill=${color}></rect>`;
+    }
+
+    const text = (x, y, content) => {
+      return `<text x=${x} y=${y}>${content}</text>`;
+    }
+
+    const offsetLeft = 100;
+    const barWidth = 40;
+    const color = 'red'
+
+    let html = '';
+    data.forEach((item, index) => {
+      html += rect(100 * index + offsetLeft, 800 - item, barWidth, item, color)
+      html += text(100 * index + offsetLeft, 800 - item, item)
+    })
+    console.log(html)
+    svg.innerHTML += html;
+  </script>
+  
+</body>
+</html>

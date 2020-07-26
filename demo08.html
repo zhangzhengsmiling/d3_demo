@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    const width = 800;
+    const height = 800;
+    const body = d3.select('body')
+                  // .append('body')
+                  // .attr('width', width)
+                  // .att('height', height);
+
+    const dataset = [
+      'linear',
+      'cubic',
+      'cubic-in-out',
+      'sin',
+      'sin-out',
+      'exp',
+      'circle',
+      'back',
+      'bounce',
+      t => t * t,
+    ]
+
+    body.selectAll('div')
+        .data(dataset)
+        .enter()
+        .append('div')
+        .data(dataset)
+        .style('width', '100px')
+        .style('height', '40px')
+        .style('margin-top', '40px')
+        .style('background', 'red')
+        .style('margin-left', 0)
+        .append('span')
+        .text(d => d)
+    body.selectAll('div')
+        .data(dataset)
+        .each((d, i, $this) => {
+          console.log(d3.select($this))
+          d3.select($this)
+            .transition()
+            .easeLinear()
+            .duration(10000)
+            .style('width', '100px')
+            .style('height', '40px')
+            .style('margin-top', '40px')
+            .style('background', 'red')
+            .style('margin-left', '800px')
+        })
+    body.selectAll('div')
+        .exit()
+        .remove()
+
+
+  </script>
+  
+</body>
+</html>

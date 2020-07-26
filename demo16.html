@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script  src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+
+    const tree = {
+      "name": "wanghuahua",
+      "value": 100,
+      "children": [
+        {
+          "name": "zhangzhengsmiling",
+          "value": 1000
+        },
+        {
+          "name": "zhangzhengsmiling",
+          "value": 345
+        },
+        {
+          "name": "zhangzhengsmiling",
+          "value": 555,
+          "children": [
+            {
+              "name": "zhangzhengsmiling",
+              "value": 6438,
+              "children": [
+                {
+                  "name": "zhangliu",
+                  "value": 220
+                },
+                {
+                  "name": "wangheng",
+                  "value": 180
+                }
+              ]
+            },
+          ]
+        },
+        {
+          "name": "zhangzhengsmiling",
+          "value": 6438,
+          "children": [
+            {
+              "name": "zhangliu",
+              "value": 220,
+              "children": [
+                {
+                  "name": "zhangliu",
+                  "value": 220
+                },
+                {
+                  "name": "wangheng",
+                  "value": 180
+                }
+              ]
+            },
+            {
+              "name": "wangheng",
+              "value": 180
+            }
+          ]
+        },
+        {
+          "name": "zhangzhengsmiling",
+          "value": 3334,
+          "children": [
+            {
+              "name": "chegnhua",
+              "value": 400,
+              "children": [
+                {
+                  "name": "zhangliu",
+                  "value": 220
+                },
+                {
+                  "name": "wangheng",
+                  "value": 180
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "zhangzhengsmiling",
+          "value": 10
+        },
+        {
+          "name": "zhangzhengsmiling",
+          "value": 1050
+        }
+      ]
+    }
+
+
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientHeight;
+    const padding = {
+      left: 50,
+      right: 50,
+      top: 50,
+      bottom:50,
+    }
+
+    const innerWidth = outerWidth - padding.left - padding.right;
+    const innerHeight =  outerHeight - padding.top - padding.bottom;
+
+    const h_data = d3.hierarchy(tree)
+    const treeData = d3.tree()
+      .size([innerWidth, innerHeight])(h_data);
+    console.log(treeData);
+
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight);
+    
+    const g = svg.append('g')
+      .attr('transform', `translate(${padding.left}, ${padding.top})`)
+    
+    const treeRender = d3.linkVertical()
+      .x(d => d.x)
+      .y(d => d.y)
+
+
+    const render = (treeData) => {
+      g.selectAll('path')
+        .data(treeData.links(), d => d.value)
+        .join('path')
+        .transition()
+        .duration(500)
+        .ease(d3.easeCubic)
+        .attr('d', treeRender)
+        .attr('stroke', 'rgba(100, 100, 100, 0.5)')
+        .attr('fill', 'none')
+
+      g.selectAll('circle')
+        .data(treeData.descendants())
+        .join('circle')
+        .attr('cx', d => d.x)
+        .attr('cy', d => d.y)
+        .attr('r', 6)
+        .attr('fill', 'white')
+        .attr('stroke-width', 2)
+        .attr('stroke', 'orange')
+        .on('mouseover', (d, i, target) => {
+          d3.select(target[i])
+            .attr('stroke', 'gray')
+            .style('cursor', 'pointer')
+        })
+        .on('mouseout', (d, i, target) => {
+          d3.select(target[i])
+            .attr('stroke', 'orange')
+        })
+        .on('click', (d, i, target) => {
+          if(d.children !== null) {
+            d._children = d.children;
+            d.children = null;
+          } else {
+            d.children = d._children;
+            d._children = null;
+          }
+          render(treeData)
+        })
+
+        g.selectAll('text')
+        .data(treeData.descendants())
+        .join('text')
+        .attr('x', d => d.x)
+        .attr('y', d => d.y)
+        .attr('fill', 'white')
+        .attr('stroke-width', 1)
+        .attr('stroke', 'orange')
+        .attr('text-anchor', 'left')
+        .attr('transform', `translate(${10}, ${0})`)
+        .text(d => d._children ? '+' : '-')
+    }
+    render(treeData)
+  </script>
+  
+</body>
+</html>

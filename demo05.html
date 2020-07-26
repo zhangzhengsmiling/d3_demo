@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- <svg width="800" height="800"></svg> -->
+  <div style="width: 100%;height: 100%;"></div>
+
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+
+  <script>
+
+    const render = data => {
+      const graph = d3.select('div');
+      graph
+        .selectAll('div')      
+        .data(data)
+        .enter()
+        .append('div')
+        .append('span')
+
+      graph
+        .data(data)
+        .selectAll('div')
+          .style('width', d => d + 'px')
+          .style('height', '40px')
+          .style('background', 'red')
+          .style('margin-top', '60px')
+        .select('span')
+          .style('float', 'right')
+          .style('line-height', '40px')
+          .style('color', '#fff')
+          .style('margin-right', '5px')
+          .text(d => d)
+
+      graph
+        .selectAll('div')
+        .data(data)
+        .exit()
+        .remove();
+
+      graph
+        .selectAll('div')
+        .filter(d => d > 500)
+          .style('background', 'orange')
+        .select('span')
+          .style('color', 'green')
+    }
+
+    const random = (begin, end) => Math.round(Math.random() * (end - begin) + begin);
+
+    const data = new Array(6).fill('').map(item => random(200, 600));
+    setInterval(() => {
+      render(data)
+      data.shift();
+      data.push(random(200, 600))
+    }, 1000)
+
+
+    const linear = d3.scaleLinear()
+      .domain([1, 10])
+      .range([1, 100])
+    console.log(linear(10))
+
+    const pow = d3.scalePow()
+      .exponent(2)
+      // .range([0, 10])
+    console.log(pow(100));
+    
+    const timeScale = d3.scaleTime()
+      .domain([new Date('2020-01-01'), new Date('2021-01-01')])
+      .range([0, 100]);
+    console.log(timeScale(new Date('2020-03-01')))
+
+//     const dollarInterPolator = (a, b) => {
+//       const va = parseFloat(a.split('$')[1]);
+//       const vb = parseFloat(b.split('$')[1]);
+
+//       return (v) => {
+//         return '$' + va + (vb - va) * v;
+//       }
+//     }
+
+// console.log(Object.keys(d3).filter(key => /interpolat/.test(key)))
+//     d3.interpolators.push(dollarInterPolator);
+
+//     const dollarScale = d3.scaleLinear().domain([0, 100]).range('$0', '$100')
+//     console.log(dollarScale(50))
+
+
+  </script>
+  
+</body>
+</html>

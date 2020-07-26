@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+
+    const ds = [
+      { startAngle: 0, endAngle: Math.PI * 0.5 },
+      { startAngle: Math.PI * 0.5, endAngle: Math.PI * 0.8 },
+      { startAngle: Math.PI * 0.8, endAngle: Math.PI * 1.2 },
+      { startAngle: Math.PI * 1.2, endAngle: Math.PI * 2.0 },
+    ]
+
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientHeight;
+    const colors = d3.scaleOrdinal()
+      .domain(ds.map((d, i) => i))
+      .range(d3.schemeSet1)
+
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight);
+    
+    const arc = d3.arc()
+      .outerRadius(200)
+      .innerRadius(100)
+
+    svg.append('g')
+      .attr('id', 'pie')
+      .attr('transform', `translate(400, 400)`)
+      .selectAll('path')
+      .data(ds)
+      .join('path')
+      .attr('d', arc)
+      .attr('fill', (d, i) => d3.schemeSet1[i])
+      .attr('stroke', 'gray')
+      .attr('stroke-width', 4)
+      .attr('opacity', 1.0)
+      .on('mouseover', (d, i, target) => {
+        d3.select(target[i])
+          .transition()
+          .duration(50)
+          .attr('opacity', 0.8)
+      })
+      .on('mouseout', (d, i, target) => {
+        d3.select(target[i])
+          .transition()
+          .duration(50)
+          .attr('opacity', 1.0)
+      })
+
+  </script>
+</body>
+</html>

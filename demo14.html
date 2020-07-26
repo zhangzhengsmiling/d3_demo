@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    // const ds = new Array(9).fill('').map((item, index) => ({
+    //   date: `2020-01-0${index + 1}`,
+    //   value: d3.randomUniform(100, 200)(),
+    // }))
+
+    // const outerWidth = document.documentElement.clientWidth;
+    // const outerHeight = document.documentElement.clientWidth;
+    // const padding = {
+    //   left: 50,
+    //   right: 50,
+    //   top: 50,
+    //   bottom: 50,
+    // }
+
+    // const xValue = d => d.date;
+    // const yValue = d => d.value;
+
+    // const innerWidth = outerWidth - padding.left - padding.right;
+    // const innerHeight = outerHeight - padding.top - padding.bottom;
+
+    // const xScale = d3.scaleBand()
+    //   .domain(ds.map(xValue))
+    //   .range([0, innerWidth])
+
+    // const yScale = d3.scaleLinear()
+    //   .domain(ds.map(yValue).reverse())
+    //   .range([0, innerHeight])
+    
+    // const xAxis = d3.axisRight(yScale)
+    // const yAxis = d3.axisBottom(xScale)
+
+    // const svg = d3.select('body')
+    //   .append('g') 
+    //   .call(xAxis)
+
+    // console.log(ds)
+
+
+    const ds = [
+      [100, 200],
+      [200, 345],
+      [300, 430],
+      [400, 388],
+      [500, 344],
+      [600, 300],
+      [700, 289],
+    ]
+
+    const p_start = d3.line()
+      .x(d => d[0])
+      .y(d => 0)
+      .curve(d3.curveCardinal.tension(0.5))
+
+    const p = d3.line()
+      .x(d => d[0])
+      .y(d => d[1])
+      .curve(d3.curveCardinal.tension(0.5))
+
+    d3.select('body')
+      .append('svg')
+      .attr('width', 800)
+      .attr('height', 800)
+      .datum(ds)
+      .append('path')
+      .attr('d', p_start)
+      .transition()
+      .duration(1000)
+      .ease(d3.easeLinear)
+      .attr('d', p)
+      .attr('stroke', 'gray')
+      .attr('stroke-opacity', 1)
+      .attr('stroke-width', 4)
+      .attr('fill', 'none')
+
+    d3.select('svg')
+      .selectAll('circle')
+      .data(ds)
+      .enter()
+      .append('circle')
+      .attr('cx', d => d[0])
+      .attr('cy', 0)
+      .attr('r', 0)
+    d3.select('svg')
+      .selectAll('circle')
+      .data(ds)
+      .transition()
+      .duration(1000)
+      .ease(d3.easeLinear)
+      .attr('cx', d => d[0])
+      .attr('cy', d => d[1])
+      .attr('r', d => 5)
+      .attr('fill', 'white')
+      .attr('stroke', 'red')
+      .attr('stroke-width', 2)
+
+  </script>
+</body>
+</html>

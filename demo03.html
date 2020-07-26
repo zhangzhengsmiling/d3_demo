@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  
+
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script>
+
+    const random = (start, end) => {
+      return Math.round(Math.random() * (end - start) + start);
+    }
+
+    const dataset = new Array(10).fill('').map(() => random(100, 400));
+    const offsetLeft = 60
+
+    const svg = d3.select('body')
+                  .append('svg')
+                  .attr('width', '800')
+                  .attr('height', '800')
+    svg.selectAll('rect')
+      .data(dataset)
+      .enter()
+      .append('rect')
+      .attr('x', (d, i) => i * 100 + offsetLeft)
+      .attr('y',d => 800 - d)
+      .attr('width', 40)
+      .attr('height', d => d)
+      .attr('fill', 'red');
+
+    svg.selectAll('text')
+      .data(dataset)
+      .enter()
+      .append('text')
+      .attr('x', (d, i) => i * 100 + offsetLeft)
+      .attr('y', d => 800 - d)
+      .attr('width', d => 800 - d)
+      .attr('height', d => d)
+      .text(d=>d)
+  </script>
+</body>
+</html>

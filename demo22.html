@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientHeight;
+
+
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+
+
+    const dates = [
+      '2020-01-01',
+      '2020-01-02',
+      '2020-01-03',
+      '2020-01-04',
+      '2020-01-05',
+      '2020-01-06',
+      '2020-01-07',
+      '2020-01-08',
+      '2020-01-09',
+      '2020-01-10',
+      '2020-01-11',
+      '2020-01-12',
+    ]
+    const ds = new Array(12).fill('').map((item, index) => ({
+      date: dates[index],
+      apple: d3.randomUniform(10, 20)(),
+      pineapple: d3.randomUniform(10, 20)(),
+      peach: d3.randomUniform(10, 20)(),
+      watermelon: d3.randomUniform(10, 20)(),
+    }))
+    console.log(ds)
+
+    const stack = d3.stack()
+      .keys(['apple', 'pineapple', 'peach', 'watermelon'])(ds)
+    console.log(stack)
+    
+  </script>
+  
+</body>
+</html>

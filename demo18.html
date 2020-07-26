@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <script  src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+
+    const value = 100;
+
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', 800)
+      .attr('height', 800)
+
+    svg.append('text')
+      .datum(value)
+      .attr('class', 'count-down')
+      .attr('x', 100)
+      .attr('y', 100)
+      .attr('stroke', 'gray')
+      .attr('stroke-width', 2)
+      .attr('font-size', 50)
+      .attr('fill', 'gray')
+      .text(0)
+      .transition()
+      .ease(d3.easeCubic)
+      .duration(5000)
+      .tween('text', function(d){
+        const i = d3.interpolateNumber(0, 10000)
+        return t => {
+          d3.select(this).text(Math.round(i(t)))
+        }
+      })
+
+    // d3.interpolators.push()
+
+    // svg.append('text')
+    //   .datum(value)
+    //   .attr('class', 'count-down')
+    //   .attr('x', 200)
+    //   .attr('y', 200)
+    //   .attr('stroke', 'orange')
+    //   .attr('fill', 'orange')
+    //   .attr('font-size', 50)
+    //   .text('a')
+    //   .transition()
+    //   .ease(d3.easeLinear)
+    //   .duration(3000)
+    //   .text('z')
+    //   .tween('text', () => {
+    //     const i = (a, b) => {
+    //       let re = /^(a-z)$/, ma, mb;
+    //       if((ma = re.exec(a)) && (mb = re.exec(b))) {
+    //         const a = a.charCodeAt(0);
+    //         const delta = a - b.charCodeAt(0);
+    //         return t => String.fromCharCode(Math.ceil(a - delta - delta * t))
+    //       }
+    //     }
+    //     return t => {
+    //       d3.select(this).text(i(t))
+    //     }
+    //   })
+  </script>
+  
+</body>
+</html>

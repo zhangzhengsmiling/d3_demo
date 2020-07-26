@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <svg width="800" height="800"> 
+    <!-- <line x1="0" y1="0" x2="100" y2="100" stroke="red"></line> -->
+  </svg>
+  
+  <script>
+    const svg = document.querySelector('svg');
+
+    const line = (x1, y1, x2, y2, color) => {
+      return `<line x1=${x1} y1=${y1} x2=${x2} y2=${y2} stroke=${color}></line>`
+    }
+
+    // svg.innerHTML += line(100, 100, 200, 300, 'green')
+    svg.innerHTML += line(0, 200, 400, 200, '#000');
+    svg.innerHTML += line(200, 0, 200, 400, '#000');
+    for(let i = 0; i <= 400; i+= 20) {
+      svg.innerHTML += line(i, 205, i, 195, '#080808');
+      svg.innerHTML += line(205, i, 195, i, '#080808')
+    }
+  </script>
+</body>
+</html>
