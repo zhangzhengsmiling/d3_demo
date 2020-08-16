@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>count down</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientHeight;
+    const duration = 3000;
+
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight);
+
+    // svg.append('text')
+    //   .text(100)
+    //   .attr('x', 0)
+    //   .attr('y', 20)
+    //   .attr('fill', 'red')
+    //   .attr('stroke', 'red')
+    //   .transition()
+    //   .duration(duration)
+    //   .tween('text', function(d){
+    //     const i = d3.interpolateNumber(100, 1000)
+    //     return t => {
+    //       d3.select(this).text(Math.round(i(t)))
+    //     }
+    //   })
+
+    const compose = (...fns) => v => fns.reduceRight((temp, cur) => cur(temp), v)
+
+    const mapfn = v => parseInt(v)
+
+    const countdown = (select) => {
+      console.log(select)
+      if(!select) return;
+      select.append('text')
+        .classed('countdown', true)
+        .attr('fill', 'red')
+        .attr('stroke', 'red')
+        .attr('x', 100)
+        .attr('y', 100)
+        .text(0)
+        .transition()
+        .duration(5000)
+        .tween('text', (d, index, target) => {
+          const i = d3.interpolateNumber(0, 1000);
+          return t => d3.select(target[index])
+            .text(i(t))
+        })
+    }
+
+    svg.call(countdown)
+      .select('.countdown')
+      .transition()
+      .delay(5000)
+      .duration(2000)
+      .attr('fill', 'green')
+      .attr('stroke', 'green')
+
+    // svg.append('text')
+    //   .classed('count-down', true)
+    //   .attr('fill', 'red')
+    //   .attr('stroke', 'red')
+    //   .attr('x', 100)
+    //   .attr('y', 100)
+    //   .text(0)
+    //   .transition()
+    //   .duration(duration)
+    //   .tween('text', (d, index, target) => {
+    //     const i = d3.interpolateNumber(0, 1000)
+    //     return t => {
+    //       const fn = compose(mapfn, i);
+    //       d3.select(target[index])
+    //         .text(fn(t));
+    //     };
+    //   })
+      // .text(1000)
+</script>
+
+</body>
+</html>
