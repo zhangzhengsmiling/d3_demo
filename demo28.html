@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+  <script type="text/javascript">
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientHeight;
+    const padding = {
+      left: 50,
+      top: 50,
+      bottom: 50,
+      right: 50,
+    }
+    const innerWidth = outerWidth - padding.left - padding.right;
+    const innerHeight = outerHeight - padding.top - padding.bottom;
+
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+
+    const randomUniform = d3.randomUniform(200, 800);
+    const ds = new Array(11).fill('').map((d, i) => ({
+      x: i + 1,
+      y: randomUniform(),
+    }))
+    console.log(ds);
+
+    const yScale = d3.scaleLinear()
+      .domain([0, d3.max(ds, d => d.y)])
+      .range([0, innerHeight].reverse())
+
+    const xScale = d3.scaleBand()
+      .domain(ds.map(item => item.x))
+      .range([0, innerWidth])
+
+      console.log(innerWidth)
+
+    const xAxis = d3.axisBottom()
+      .scale(xScale)
+    svg
+      .append('g')
+      .classed('x-axis', true)
+      .attr('transform', `translate(${padding.left}, ${padding.top + innerHeight})`)
+      .call(xAxis)
+    const yAxis = d3.axisLeft()
+      .scale(yScale)
+    svg
+      .append('g')
+      .classed('y-axis', true)
+      .attr('transform', `translate(${padding.left}, ${padding.top})`)
+      .call(yAxis)
+
+      svg.append('defs')
+        .append('linearGradient')
+        .attr('id', 'color')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', 0)
+        .attr('y2', 1)
+        .selectAll('stop')
+        .data([['0%', 'red'], ['50%', 'black'], ['100%', 'blue']])
+        .join('stop')
+        .attr('offset', d => d[0])
+        .attr('stop-color', d => d[1])
+
+    const line = d3.line()
+      .x(d => xScale(d.x))
+      .y(d => yScale(d.y))
+      .curve(d3.curveCatmullRom.alpha(0.5));
+
+    const area = d3.area()
+      .x(d => xScale(d.x))
+      .y1(d => yScale(d.y))
+      .y0(() => yScale(0))
+      .curve(d3.curveCatmullRom.alpha(0.5));
+
+    svg.append('g')
+      .classed('line', true)
+      .attr('transform', 'translate(' + padding.left + ',' + padding.top + ')')
+      .append('path')
+      .datum(ds)
+      .attr('d', line)
+      .attr('stroke', 'green')
+      .attr('stroke-width', 2)
+      .attr('fill', 'none');
+
+    svg.append('g')
+      .classed('area', true)
+      .attr('transform', 'translate(' + padding.left + ',' + padding.top + ')')
+      .append('path')
+      .datum(ds)
+      .attr('d', area)
+      .attr('stroke', 'green')
+      .attr('fill', 'url(#color)');
+
+
+      // <stop offset="0%" stop-color="red"/>
+      //   <stop offset="50%" stop-color="black" stop-opacity="0"/>
+      //   <stop offset="100%" stop-color="blue"/>
+
+  </script>
+</body>
+</html>

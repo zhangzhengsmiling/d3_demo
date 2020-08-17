@@ -39,6 +39,8 @@
     //     }
     //   })
 
+    const alphas = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
     const compose = (...fns) => v => fns.reduceRight((temp, cur) => cur(temp), v)
 
     const mapfn = v => parseInt(v)
@@ -52,13 +54,16 @@
         .attr('stroke', 'red')
         .attr('x', 100)
         .attr('y', 100)
-        .text(0)
+        .text('a')
         .transition()
+        .ease(d3.easeLinear)
         .duration(5000)
         .tween('text', (d, index, target) => {
-          const i = d3.interpolateNumber(0, 1000);
+          const scaleQuantize = d3.scaleQuantize()
+              .domain([0, 1])
+              .range(alphas);
           return t => d3.select(target[index])
-            .text(i(t))
+            .text(scaleQuantize(t))
         })
     }
 
