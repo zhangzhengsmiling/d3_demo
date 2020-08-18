@@ -9,12 +9,119 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script>
     const outerWidth = document.documentElement.clientWidth;
-    const outerHeight = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientHeight;
+    const padding = {
+      left: 50,
+      right: 50,
+      top: 50,
+      bottom: 50,
+    }
+    const innerWidth = outerWidth - padding.left - padding.right;
+    const innerHeight = outerHeight - padding.top - padding.bottom;
+
     const svg = d3.select('body')
       .append('svg')
       .attr('width', outerWidth)
       .attr('height', outerHeight)
-    // const ds = 
+
+    const randomUniform = d3.randomUniform(200, 800);
+    const ds = new Array(11).fill('').map((item, idx) => ({
+      x: idx,
+      y: randomUniform(),
+    }))
+
+    const xScale = d3.scaleBand()
+      .domain(ds.map(item => item.x))
+      .range([0, innerWidth])
+
+    const yScale = d3.scaleLinear()
+      .domain([0, d3.max(ds, d => d.y)])
+      .range([0, innerHeight].reverse())
+      .nice()
+
+    const xAxis = d3.axisBottom()
+      .scale(xScale)
+      // .
+    svg.append('g')
+      .classed('x-axis', true)
+      .attr('transform', `translate(${padding.left}, ${padding.top + innerHeight})`)
+      .call(xAxis)
+
+    const yAxis = d3.axisLeft()
+      .scale(yScale)
+    
+    svg.append('g')
+      .classed('y-axis', true)
+      .attr('transform', `translate(${padding.left}, ${padding.top})`)
+      .call(yAxis)
+
+    const line = d3.line()
+      .x(d => xScale(d.x) + xScale.bandwidth() / 2)
+      .y(d => yScale(d.y))
+
+    const area = d3.area()
+      .x(d => xScale(d.x) + xScale.bandwidth() / 2)
+      .y1(d => yScale(d.y))
+      .y0(() => yScale(0))
+    
+    const colors = [
+      { offset: '0%', color: 'rgba(85, 48, 122, 1.0)'},
+      { offset: '50%', color: 'rgba(85, 48, 122, 0.8)' },
+      { offset: '100%', color: 'rgba(85, 48, 122, 0.2)' },
+    ]
+
+    svg.append('linearGradient')
+      .attr('id', 'color')
+      .attr('x1', 0)
+      .attr('y1', 0)
+      .attr('x2', 0)
+      .attr('y2', 1)
+      .selectAll('stop')
+      .data(colors)
+      .enter()
+      .append('stop')
+      .attr('offset', d => d.offset)
+      .attr('stop-color', d => d.color)
+      
+    svg.append('g')
+      .classed('line', true)
+      .attr('transform', `translate(${padding.left}, ${padding.top})`)
+      .datum(ds)
+      .append('path')
+      .transition()
+      .duration(200)
+      .attr('d', line)
+      .attr('stroke-width', 3)
+      .attr('stroke', 'purple')
+      .attr('opacity', 0.4)
+      .attr('fill', 'none');
+
+    svg.append('g')
+      .classed('area', true)
+      .attr('transform', `translate(${padding.left}, ${padding.top})`)
+      .datum(ds)
+      .append('path')
+      .transition()
+      .duration(200)
+      .attr('d', area)
+      .attr('fill', 'url(#color)')
+    
+    svg.append('g')
+      .attr('id', 'g-v-line')
+      .attr('transform', `translate(${padding.left}, ${padding.top})`)
+      .selectAll('line')
+      .data([0, 100, 200, 300, 400, 500, 600, 700, 800])
+      .enter()
+      .append('line')
+      .classed('v-line', true)
+      .attr('x1', 0)
+      .attr('y1', d => yScale(d))
+      .attr('x2', innerWidth)
+      .attr('y2', d => yScale(d))
+      .attr('stroke', 'rgba(100, 100, 100, 0.1)')
+
+    
+    
   </script>
   
 </body>
