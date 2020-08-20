@@ -58,6 +58,7 @@
     const line = d3.line()
       .x(d => xScale(d.x) + xScale.bandwidth() / 2)
       .y(d => yScale(d.y))
+      .curve()
 
     const area = d3.area()
       .x(d => xScale(d.x) + xScale.bandwidth() / 2)
@@ -70,7 +71,9 @@
       { offset: '100%', color: 'rgba(85, 48, 122, 0.2)' },
     ]
 
-    svg.append('linearGradient')
+    svg
+      .append('defs')
+      .append('linearGradient')
       .attr('id', 'color')
       .attr('x1', 0)
       .attr('y1', 0)

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+  <script>
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientWidth;
+    
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('class', 'pie-chart')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+    
+    const ds = [
+      { startAngle: 0, endAngle: 0.2 * Math.PI, color: '#eee' },
+      { startAngle: 0.2 * Math.PI, endAngle: 0.5 * Math.PI, color: '#ccc' },
+      { startAngle: 0.5 * Math.PI, endAngle: 1 * Math.PI, color: '#aaa' },
+      { startAngle: Math.PI, endAngle: 1.4 * Math.PI, color: '#999' },
+      { startAngle: 1.4 * Math.PI, endAngle: 2 * Math.PI, color: '666' },
+    ]
+    const pie = d3.arc()
+      .innerRadius(0)
+      .outerRadius(150)
+    const pie2 = d3.arc()
+      .outerRadius(170)
+      .innerRadius(160);
+
+    svg.append('g')
+      .attr('transform', 'translate(' + 400 + ',' + 400 + ')')
+      .selectAll('path')
+      .data(ds)
+      .enter()
+      .append('path')
+      .on('mouseover', (d, i, target) => {
+        d3.select(target[i])
+          .attr('fill', 'gray')
+      })
+      .on('mouseout', (d, i, target) => {
+        d3.select(target[i])
+          .attr('fill', d3.schemeCategory10[i])
+      })
+      .transition()
+      .duration(1000)
+      .tween('d', (d, i, target) => {
+        const start = { startAngle: 0, endAngle: 0 };
+        const inter = d3.interpolateObject(start, d);
+        return t => {
+          d3.select(target[i])
+            .attr('d', pie(inter(t)))
+        }
+      })
+      .attr('fill', (d, i) => d3.schemeCategory10[i])
+      
+
+    svg.append('g')
+      .attr('transform', 'translate(' + 400 + ',' + 400 + ')')
+      .selectAll('path')
+      .data(ds)
+      .enter()
+      .append('path')
+      .transition()
+      .duration(1000)
+      .delay(1000)
+      .tween('d', (d, i, target) => {
+        const start = { startAngle: 0, endAngle: 0 };
+        const inter = d3.interpolateObject(start, d);
+        return t => {
+          d3.select(target[i])
+            .attr('d', pie2(inter(t)))
+        }
+      })
+      .attr('fill', (d, i) => d3.schemeCategory10[i])
+      .attr('stroke', 'none')
+
+  </script>
+  
+</body>
+</html>
