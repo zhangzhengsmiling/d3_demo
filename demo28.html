@@ -83,7 +83,7 @@
 
     svg.append('g')
       .classed('line', true)
-      .attr('transform', 'translate(' + padding.left + ',' + padding.top + ')')
+      .attr('transform', `translate(${padding.left}, ${padding.top})`)
       .append('path')
       .datum(ds)
       .attr('d', line)
@@ -93,7 +93,7 @@
 
     svg.append('g')
       .classed('area', true)
-      .attr('transform', 'translate(' + padding.left + ',' + padding.top + ')')
+      .attr('transform', `translate(${padding.left}, ${padding.top})`)
       .append('path')
       .datum(ds)
       .attr('d', area)

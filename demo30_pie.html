@@ -7,6 +7,8 @@
 </head>
 <body>
   <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/d3-tip/0.9.1/d3-tip.js"></script>
+  <!-- <link rel="stylesheet" href="//rawgithub.com/Caged/d3-tip/master/examples/example-styles.css"> -->
   <script>
     const outerWidth = document.documentElement.clientWidth;
     const outerHeight = document.documentElement.clientWidth;
@@ -30,6 +32,11 @@
     const pie2 = d3.arc()
       .outerRadius(170)
       .innerRadius(160);
+// console.log(d3.tip)
+    const tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .html(d => `${d.startAngle}, ${d.endAngle}`)
+    svg.call(tip);
 
     svg.append('g')
       .attr('transform', 'translate(' + 400 + ',' + 400 + ')')
@@ -38,12 +45,11 @@
       .enter()
       .append('path')
       .on('mouseover', (d, i, target) => {
-        d3.select(target[i])
-          .attr('fill', 'gray')
+        const position = d3.mouse(target[i]);
+        tip.show(d, position);
       })
       .on('mouseout', (d, i, target) => {
-        d3.select(target[i])
-          .attr('fill', d3.schemeCategory10[i])
+        tip.hide(d, i, target);
       })
       .transition()
       .duration(1000)
@@ -56,7 +62,6 @@
         }
       })
       .attr('fill', (d, i) => d3.schemeCategory10[i])
-      
 
     svg.append('g')
       .attr('transform', 'translate(' + 400 + ',' + 400 + ')')
