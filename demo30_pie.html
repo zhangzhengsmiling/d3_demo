@@ -35,7 +35,13 @@
 // console.log(d3.tip)
     const tip = d3.tip()
       .attr('class', 'd3-tip')
-      .html(d => `${d.startAngle}, ${d.endAngle}`)
+      .html((d, p) => {
+        console.log(d, p);
+        return `<div style="position: absolute; left: 200px;top: 200px; background: red">
+          ${d.startAngle}, ${d.endAngle}
+        </div>`
+      })
+
     svg.call(tip);
 
     svg.append('g')
@@ -70,6 +76,7 @@
       .enter()
       .append('path')
       .transition()
+      .ease(d3.easeBackOut)
       .duration(1000)
       .delay(1000)
       .tween('d', (d, i, target) => {
