@@ -12,20 +12,51 @@
   <script>
     const outerWidth = document.documentElement.clientWidth;
     const outerHeight = document.documentElement.clientWidth;
-    
+
+    const throttle = (fn, delay = 1000) => (...args) => {
+      let timeoutId;
+      return () => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          fn(...args);
+        }, delay)
+      }
+    }
+
+
+    const value = [
+      0.1, 0.2, 0.3, 0.4,
+    ]
+    const sum = (ds, idx) => ds.reduce((temp, cur) => {
+      return temp + cur;
+    },0)
+
+    const angleGenerator = (start, end) => {
+      return {
+        startAngle: start * Math.PI * 2,
+        endAngle: end * Math.PI * 2,
+        value: end - start,
+      }
+    }
+
+
+    const genData = (ds) => {
+      let sum = 0;
+      const data = [];
+      for(let i = 0; i < ds.length; i++) {
+        data.push(angleGenerator(sum, sum + ds[i]))
+        sum += ds[i];
+      }
+      return data;
+    }
+
     const svg = d3.select('body')
       .append('svg')
       .attr('class', 'pie-chart')
       .attr('width', outerWidth)
       .attr('height', outerHeight)
-    
-    const ds = [
-      { startAngle: 0, endAngle: 0.2 * Math.PI, color: '#eee' },
-      { startAngle: 0.2 * Math.PI, endAngle: 0.5 * Math.PI, color: '#ccc' },
-      { startAngle: 0.5 * Math.PI, endAngle: 1 * Math.PI, color: '#aaa' },
-      { startAngle: Math.PI, endAngle: 1.4 * Math.PI, color: '#999' },
-      { startAngle: 1.4 * Math.PI, endAngle: 2 * Math.PI, color: '666' },
-    ]
+
+    const ds = genData(value)
     const pie = d3.arc()
       .innerRadius(0)
       .outerRadius(150)
@@ -37,8 +68,8 @@
       .attr('class', 'd3-tip')
       .html((d, p) => {
         console.log(d, p);
-        return `<div style="position: absolute; left: 200px;top: 200px; background: red">
-          ${d.startAngle}, ${d.endAngle}
+        return `<div style="position: absolute; left: ${p[0] + 400 + 5}px;top: ${p[1] + 400 + 5}px; background: white">
+          ${(d.value * 100).toFixed(2) + '%'}
         </div>`
       })
 
@@ -52,7 +83,12 @@
       .append('path')
       .on('mouseover', (d, i, target) => {
         const position = d3.mouse(target[i]);
-        tip.show(d, position);
+        console.log(position);
+        try {
+          tip.show(d, position);
+        } catch(err) {
+          console.log(err.message);
+        }
       })
       .on('mouseout', (d, i, target) => {
         tip.hide(d, i, target);
