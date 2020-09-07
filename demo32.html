@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+  <script>
+
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientWidth;
+    const DURATION = 3600000;
+    const numBegin = () => 10000000
+
+    const numberFormatter = num => num.toFixed(2);
+    const compose = (...fns) => trigger => fns.reduceRight((temp, cur) => cur(temp), trigger)
+
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+
+    svg.datum(1000000000000000)
+      .append('text')
+      .attr('x', 100)
+      .attr('y', 100)
+      .attr('fill', 'red')
+      .attr('stroke', 'red')
+      .attr('font-size', 30)
+      .text(d => d)
+      .transition()
+      .duration(DURATION)
+      .tween('countdown', (d, idx, target) => {
+        const i = d3.interpolateNumber(numBegin(), d);
+        const formmater = compose(numberFormatter, i);
+        return t => d3.select(target[idx])
+          .text(formmater(t))
+      })
+
+  </script>
+</body>
+</html>
