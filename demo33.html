@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    const outerWidth = document.documentElement.clientWidth;
+    const outerHeight = document.documentElement.clientHeight;
+    
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight);
+    svg.html(`
+      <defs>
+        <path id="a1" d="M0 50 C150 150 100 -50 300 50" stroke="#000" fill="none"/>
+      </defs>
+    `)
+
+    const textpath = (selector) => {
+      selector
+        .append('textPath')
+        .attr('x-link:href', '#a1')
+        .text('')
+    }
+
+    svg.append('text')
+      // .text(100)
+      .style('fill', 'red')
+      .style('stroke', 'red')
+      .style('stroke-width', 1)
+      .style('stroke-dasharray', '0 10')
+      .attr('dx', 100)
+      .attr('y', 100)
+      .call(textpath)
+      .append('textPath')
+      .attr('x-link:href', '#a1')
+      .text(12345678901234567)
+      .transition()
+      .duration(3000)
+      .tween('text', (d, idx, target) => {
+        const i = d3.interpolateNumber(0, 12345678901234567)
+        return t => {
+          d3.select(target[idx])
+            .text(parseInt(i(t)))
+        }
+      })
+
+    svg.append('rect')
+      .attr('x', 400)
+      .attr('y', 400)
+      .attr('fill', 'none')
+      .attr('stroke', 'green')
+      .attr('width', 200)
+      .attr('height', 80)
+      .style('stroke-dasharray', '0 0')
+      .transition()
+      .duration(3000)
+      .ease(d3.easeLinear)
+      .style('stroke-dasharray', '10 10')
+  </script>
+  
+</body>
+</html>
