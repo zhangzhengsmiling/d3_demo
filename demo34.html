@@ -4,9 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    .y-axis .tick text {
+      stroke: red;
+      opacity: 0.2;
+      font-size: 30px;
+    }
+    .x-axis .tick text {
+      stroke: red;
+      opacity: 0.2;
+      font-size: 30px;
+    }
+    .bar {
+      fill: greenyellow;
+      opacity: 0.6;
+    }
+    .bar:hover {
+      opacity: 1.0;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/d3-tip/0.9.1/d3-tip.js"></script>
 
   <script>
     
@@ -43,8 +64,6 @@
     const xScale = d3.scaleBand()
       .domain(ds.map(x))
       .range([0, innerWidth])
-
-    console.log(xScale('b'));
     
     const yScale = d3.scaleLinear()
       .domain([0, d3.max(ds, value)])
@@ -56,6 +75,11 @@
 
     const yAxis = d3.axisLeft()
       .scale(yScale);
+
+    const tip = d3.tip()
+      .html(d => d3.create('rect').style('width', '100px').style('height', '40px').style('fill', 'red').text('aaa').innerHTML)
+
+    svg.call(tip);
 
     svg.append('g')
       .attr('class', 'x-axis')
@@ -79,6 +103,22 @@
       .attr('x', d => xScale(x(d)) + xScale.bandwidth() * 0.2)
       .attr('y', d => innerHeight + yScale(value(d)) - yScale(0))
       .attr('fill', 'orange')
+      .on('mouseover', (d, idx, target) => {
+        try {
+          const position = d3.mouse(target[idx]);
+          console.log(position);
+          tip.show({
+            ...d,
+            position
+          })
+        } catch(e) {}
+      })
+      .on('mouseout', () => {
+        tip.hide();
+      })
+      .on('mousemove', () => {
+        console.log('mouse move...');
+      })
 
   </script>
   
